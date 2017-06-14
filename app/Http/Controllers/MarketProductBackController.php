@@ -11,6 +11,7 @@ use Session;
 use App\Product;
 use App\Brand;
 use App\Category;
+use App\Color;
 //User request allows you write api's
 use Response;
 
@@ -60,14 +61,6 @@ class MarketProductBackController extends Controller
                 ->withInput();
         }
 
-        // Image upload
-
-            /*
-            $imgOne = $data->file('img1');
-            $filename = time() . '.' . $imgOne->getClientOriginalExtension();
-            Image::make($imgOne)->resize(300, 300)->save(public_path('/uploads/products-images/' . $filename));
-            */
-
             $user = Auth::user();
 
             $pro = new Product();
@@ -88,7 +81,6 @@ class MarketProductBackController extends Controller
             for($i=0; $i<=5;  $i++) {
                 $name = "img". $i;
                 if($data->hasfile($name)) {
-                    //$pro->$name = $data->file($name)->move(public_path('\uploads\products', $_FILES[$name]['name']));
                     $pro->$name = $data->file($name)->move('uploads/products', $_FILES[$name]['name']);
                 }
             }
@@ -101,8 +93,6 @@ class MarketProductBackController extends Controller
             Session::flash('msg', 'Product added successfully!');
 
             return redirect()->route('allproducts');
-
-
     }
 
 //View all products
@@ -177,8 +167,6 @@ class MarketProductBackController extends Controller
         Session::flash('msg', 'Product updated successfully!');
 
         return redirect()->route('allproducts');
-
-
     }
 
     public function gettDeletProduct($id){
@@ -207,16 +195,18 @@ class MarketProductBackController extends Controller
         $user = Auth::user();
         $cat = Category::all();
         $brd = Brand::all();
+        $col = Color::all();
         $i =1;
 
         return view('admin.categoryandbrand')->with([
             'user'=>$user,
             'cat'=>$cat,
             'brd'=>$brd,
+            'col'=>$col,
             'i' => $i,
         ]);
     }
-
+//Add Category
     public function postCategory(Request $data){
 
         $validator = Validator::make($data->all(), [
@@ -242,7 +232,45 @@ class MarketProductBackController extends Controller
         return redirect()->route('categoryandbrand');
 
     }
+//Get category into view for updating
+    public function getEditCategory($id){
+        $user = Auth::user();
+        $cat = Category::findOrFail($id);
 
+        return view('admin.editcategory')->with([
+            'user'=> $user,
+            'cat' => $cat,
+        ]);
+    }
+
+ //Update Category
+    public function updateCategory(Request $data, $id){
+        $this->validate($data, [
+            'categoryName'   => 'required',
+        ]);
+
+        //get category data
+        $editCategoeyData = $data->all();
+        //update category data
+        Category::find($id)->update($editCategoeyData);
+
+        //store status message
+        Session::flash('msg', 'Category updated successfully!');
+
+        return redirect()->route('editcategory',$id);
+    }
+//Delete category
+    public function deleteCategory($id){
+        //Delete Category
+        Category::find($id)->delete();
+
+        //store status message
+        Session::flash('msg', 'Product deleted successfully!');
+
+        return redirect()->route('categoryandbrand');
+    }
+
+//Post Brand
     public function postBrand(Request $data){
 
         $validator = Validator::make($data->all(), [
@@ -266,8 +294,95 @@ class MarketProductBackController extends Controller
         Session::flash('msg', 'Brand added successfully!');
 
         return redirect()->route('categoryandbrand');
+    }
 
+//Get brand into view for updating
+    public function getEditBrand($id){
+        $user = Auth::user();
+        $brd = Brand::findOrFail($id);
 
+        return view('admin.editbrand')->with([
+            'user'=> $user,
+            'brd' => $brd,
+        ]);
+    }
+
+    //Update brand
+    public function updateBrand(Request $data, $id){
+        $this->validate($data, [
+            'brandName'   => 'required',
+        ]);
+
+        //get brand data
+        $editBrandData = $data->all();
+        //update brand data
+        Brand::find($id)->update($editBrandData);
+
+        //store status message
+        Session::flash('msg', 'Brand updated successfully!');
+
+        return redirect()->route('editbrand',$id);
+    }
+//Delete brand
+    public function deleteBrand($id){
+        //Delete Category
+        Brand::find($id)->delete();
+
+        //store status message
+        Session::flash('msg', 'Product deleted successfully!');
+
+        return redirect()->route('categoryandbrand');
+    }
+//Add Color
+    public function postColor(Request $data){
+
+        $validator = Validator::make($data->all(), [
+            'colorName' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('categoryandbrand')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $col = new Color();
+
+        $col->colorName = $data['colorName'];
+
+        $col->save();
+
+        //add category message
+        Session::flash('msg', 'Color added successfully!');
+
+        return redirect()->route('categoryandbrand');
+    }
+//Update Color
+    public function updateColor(Request $data, $id){
+        $this->validate($data, [
+            'colorName'   => 'required',
+        ]);
+
+        //get color data
+        $editColorData = $data->all();
+        //update brand data
+        Brand::find($id)->update($editColorData);
+
+        //store status message
+        Session::flash('msg', 'Color updated successfully!');
+
+        return redirect()->route('editcolor',$id);
+    }
+//Delete brand
+    public function deleteColor($id){
+        //Delete Color
+        Brand::find($id)->delete();
+
+        //store status message
+        Session::flash('msg', 'Color deleted successfully!');
+
+        return redirect()->route('categoryandbrand');
     }
 
 

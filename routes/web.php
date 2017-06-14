@@ -44,10 +44,23 @@ Route::group(['middleware' => 'web'], function () {
             /*===========Product Routes===============*/
 
             Route::get('/admin/product/category-brand', 'MarketProductBackController@getAddCatAndBrand')->name('categoryandbrand');
-
+            //Category Routes
             Route::post('/admin/product/add-category', 'MarketProductBackController@postCategory')->name('addcategory');
-
+            Route::get('/admin/product/edit-category/{id}','MarketProductBackController@getEditCategory')->name('editcategory');
+            Route::post('/admin/product/edit-category/{id}','MarketProductBackController@updateCategory')->name('updatecat');
+            Route::get('/admin/product/delete-category/{id}','MarketProductBackController@deleteCategory')->name('deletecate');
+            //Brand Routes
             Route::post('/admin/product/add-brand', 'MarketProductBackController@postBrand')->name('addbrand');
+            Route::get('/admin/product/edit-brand/{id}','MarketProductBackController@getEditBrand')->name('editbrand');
+            Route::post('/admin/product/edit-brand/{id}','MarketProductBackController@updateBrand')->name('updatebrd');
+            Route::get('/admin/product/delete-brand/{id}','MarketProductBackController@deleteBrand')->name('deletebrd');
+            //Color Route
+            Route::post('/admin/product/add-color', 'MarketProductBackController@postColor')->name('addcolor');
+            Route::get('/admin/product/edit-color/{id}','MarketProductBackController@getEditColor')->name('editcolor');
+            Route::post('/admin/product/edit-color/{id}','MarketProductBackController@updateColor')->name('updatecol');
+            Route::get('/admin/product/delete-color/{id}','MarketProductBackController@deleteColor')->name('deletecol');
+
+
 
             /*===========Order Routes===============*/
             Route::get('/admin/product/order-list', 'MarketProductBackController@getProductOrder')->name('orderlist');
