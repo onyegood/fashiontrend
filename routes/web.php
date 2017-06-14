@@ -58,7 +58,7 @@ Route::group(['middleware' => 'web'], function () {
             Route::post('/admin/product/add-color', 'MarketProductBackController@postColor')->name('addcolor');
             Route::get('/admin/product/edit-color/{id}','MarketProductBackController@getEditColor')->name('editcolor');
             Route::post('/admin/product/edit-color/{id}','MarketProductBackController@updateColor')->name('updatecol');
-            Route::get('/admin/product/delete-color/{id}','MarketProductBackController@deleteColor')->name('deletecol');
+            Route::get('/admin/product/delete-color/{id}','MarketProductBackController@deleteColor')->name('deletecolor');
 
 
 

@@ -307,6 +307,8 @@ class MarketProductBackController extends Controller
         ]);
     }
 
+
+
     //Update brand
     public function updateBrand(Request $data, $id){
         $this->validate($data, [
@@ -358,6 +360,17 @@ class MarketProductBackController extends Controller
 
         return redirect()->route('categoryandbrand');
     }
+    //Get category into view for updating
+    public function getEditColor($id){
+        $user = Auth::user();
+        $col = Color::findOrFail($id);
+
+        return view('admin.editcolor')->with([
+            'user'=> $user,
+            'col' => $col,
+        ]);
+    }
+
 //Update Color
     public function updateColor(Request $data, $id){
         $this->validate($data, [
@@ -367,7 +380,7 @@ class MarketProductBackController extends Controller
         //get color data
         $editColorData = $data->all();
         //update brand data
-        Brand::find($id)->update($editColorData);
+        Color::find($id)->update($editColorData);
 
         //store status message
         Session::flash('msg', 'Color updated successfully!');
